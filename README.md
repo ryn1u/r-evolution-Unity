@@ -1,7 +1,7 @@
 r-evolution-Unity
 =================
 
-*TO DO:*
+*DONE:*
 
 25/05/2020
 
@@ -42,8 +42,10 @@ r-evolution-Unity
 
 >   Add git version control.
 
+>   Fix aiming.
+
+*TO DO:*
+
 >   Sequencer Actions need refrences to rigibodies, sceneentities, controllers,
 >   and stats they are attached to. We can’t assaign these values in inspector.
 >   We need a universal way for them to initialize themselves.
-
->   Fix aiming.
