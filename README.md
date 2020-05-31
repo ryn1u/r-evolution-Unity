@@ -44,8 +44,16 @@ r-evolution-Unity
 
 >   Fix aiming.
 
+>   Create a default rangeIndicatorController. It will make sure that on button
+>   press the indicator is shown and on release its hidden and emits events.
+
 *TO DO:*
 
 >   Sequencer Actions need refrences to rigibodies, sceneentities, controllers,
 >   and stats they are attached to. We can’t assaign these values in inspector.
 >   We need a universal way for them to initialize themselves.
+>   SequencerComponents could have a method that takes in these required objects
+>   and on Awake() in MainSequencerComponent we invoke an event with even three
+>   arguments. SequencerComponents can than impement an interface or inherit
+>   from a class that implements a sort of constructor like void
+>   Initialize(rigidboy, sceneentity, controller).

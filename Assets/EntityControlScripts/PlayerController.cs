@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[System.Serializable]
-public class UnityMovementEvent : UnityEvent<Vector2, Vector2>
-{
 
-}
 public class PlayerController : MonoBehaviour
 {
-    public UnityMovementEvent movementEvent;
-    public UnityEvent aimEvent;
-    public UnityEvent getAim;
+    public Vector2Vector2UnityEvent movementEvent;
+    public BoolUnityEvent abilityOneEvent;//emit pass true on press, false on release
     public Camera cam;
 
     private Vector2 movementInput;
@@ -26,7 +21,7 @@ public class PlayerController : MonoBehaviour
 
         movementEvent.Invoke(movementInput, mouseInput);
 
-        if (Input.GetKeyDown(KeyCode.Q)) { aimEvent.Invoke(); }
-        if (Input.GetKeyDown(KeyCode.E)) { getAim.Invoke(); }
+        if (Input.GetKeyDown(KeyCode.Q)) { abilityOneEvent.Invoke(true); }
+        if (Input.GetKeyUp(KeyCode.Q)) { abilityOneEvent.Invoke(false); }
     }
 }

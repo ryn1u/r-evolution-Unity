@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[System.Serializable]
-public class Vector2UnityEvent : UnityEvent<Vector2>
-{
-
-}
 
 [RequireComponent(typeof(LineRenderer))]
 [RequireComponent(typeof(SceneEntity))]
 public class SequencerLineIndicator : MonoBehaviour
 {
+    public Vector2Vector2UnityEvent posAndDirEvent;
     public Vector2UnityEvent directionEvent;
+
     public LineRenderer lineRenderer;
     public SceneEntity sceneEntity;
     public float lineLength;
@@ -34,12 +31,15 @@ public class SequencerLineIndicator : MonoBehaviour
         lineRenderer.enabled = false;
         Vector2 dir = (lineRenderer.GetPosition(0) - lineRenderer.GetPosition(1)).normalized;
         directionEvent.Invoke(dir);
+        posAndDirEvent.Invoke(lineRenderer.GetPosition(0), dir);
         return dir;
     }
     public void HideLine()
     {
         lineRenderer.enabled = false;
-        directionEvent.Invoke((lineRenderer.GetPosition(0) - lineRenderer.GetPosition(1)).normalized);
+        Vector2 dir = (lineRenderer.GetPosition(0) - lineRenderer.GetPosition(1)).normalized;
+        directionEvent.Invoke(dir);
+        posAndDirEvent.Invoke(lineRenderer.GetPosition(0), dir);
     }
     void Update()
     {

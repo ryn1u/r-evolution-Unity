@@ -11,7 +11,7 @@ public class SceneEntity : MonoBehaviour
     public float lookingDirection;
     public float speed;
 
-    private bool aiming;
+    private bool aiming = false;
     public void TakeAim()
     {
         aiming = !aiming;
