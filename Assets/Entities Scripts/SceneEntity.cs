@@ -16,6 +16,10 @@ public class SceneEntity : MonoBehaviour
     {
         aiming = !aiming;
     }
+    public void TakeAim(bool aim)
+    {
+        aiming = aim;
+    }
     public void SetDirections(Vector2 moveDir, Vector2 cntrlPos)
     {
         movementDirection = (moveDir.x != 0 && moveDir.y != 0) ? moveDir * 0.707f : moveDir;
@@ -31,7 +35,7 @@ public class SceneEntity : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         myRigidbody.MovePosition(myRigidbody.position + movementDirection * speed * Time.fixedDeltaTime);
         myRigidbody.rotation = lookingDirection;

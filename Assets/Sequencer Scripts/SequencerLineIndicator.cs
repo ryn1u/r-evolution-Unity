@@ -29,7 +29,7 @@ public class SequencerLineIndicator : MonoBehaviour
     public Vector2 GetDirAndHide()
     {
         lineRenderer.enabled = false;
-        Vector2 dir = (lineRenderer.GetPosition(0) - lineRenderer.GetPosition(1)).normalized;
+        Vector2 dir = (lineRenderer.GetPosition(1) - lineRenderer.GetPosition(0)).normalized;
         directionEvent.Invoke(dir);
         posAndDirEvent.Invoke(lineRenderer.GetPosition(0), dir);
         return dir;
@@ -37,7 +37,7 @@ public class SequencerLineIndicator : MonoBehaviour
     public void HideLine()
     {
         lineRenderer.enabled = false;
-        Vector2 dir = (lineRenderer.GetPosition(0) - lineRenderer.GetPosition(1)).normalized;
+        Vector2 dir = (lineRenderer.GetPosition(1) - lineRenderer.GetPosition(0)).normalized;
         directionEvent.Invoke(dir);
         posAndDirEvent.Invoke(lineRenderer.GetPosition(0), dir);
     }
