@@ -142,4 +142,4 @@ MonoBehaviour:
   missEvent:
     m_PersistentCalls:
       m_Calls: []
-  range: 200
+  range: 30

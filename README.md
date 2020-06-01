@@ -1,59 +1,90 @@
-r-evolution-Unity
-=================
+# r-evolution Wiki
 
-*DONE:*
 
-25/05/2020
 
->   Create a universal GameActor component which will give reference to entity’s
->   position, rotation and direction vector. It will also handle the Actor’s
->   rigidbody updates.
+## Table of Contents:
 
-26/05/2020
+1.  Base game objects
+   1.  SceneEntity
+   2.  Projectile
+2.  Sequencer system
+   1. AbilitySequencer
+   2. SequencerAction
+   3. Sequencer components
+      1. Wait
+      2. Spawn Projectile
+      3. Range Indicator and Range Indicator Controller
+3.  next point
 
->   Find a better way to calculate projectile’s distance travelled.
 
->   Implement UnityEvents to sequencer.
 
-27/05/2020
 
->   Add a way for listeners to subscribe to ProjectileHit and ProjectileMiss
->   Events.
 
->   Move position and rotation to SceneEntity, so we don’t have to have
->   dependency on both SE and Rigidbody.
+## 1. Base game objects
 
->   Remove constant rotating towards the mouse and rotate to it only when aiming
->   ability.
+### Scene Entity
 
->   In Watershot sequencer replace passed for aiming SE.Direction with the
->   actual vector for aiming.
+SceneEntity is a base component of movable character. It's meant as a means for AI and Player controllers for kinematic interaction with game world. 
 
-28/05/2020
+Properties:
 
->   Rework player controller.
+- Rigibbody2D myRigidboy - holds reference to Rigidbody2D, which is used for moving the Entity.
+- Vector2 movementDirection - we assign obtained and normalized, diagonal or straight, Vector2 which is used as a direction in which Entity will move on next frame update. Because it's calculated from Input.GetAxisRaw() it will be assigned Vector2.Zero value and make do Entity stop.
+- boolean aiming - used to determined in which mode is the Entity rotated. If TRUE entity is aimed precisely, which means it will be rotated toward the exact location passed in SetDirection method in ctrlPos Vector2 argument. If FALSE Entity will automatically be rotated the same way as the last movementDirection ignoring Stop. This is to avoid a rotation bug.
+- float lookingDirection - is passed as the direction towards which the entity will be rotated on next frame update and is assigned either based on aiming mode. It either aligns with movementDirection or rotates toward input from controller (ctrlPos).
+- float speed - how fast will Entity move.
 
->   Creating Aiming System for Sequencers
+Methods:
 
->   Create WaitSequencerAction to replace coroutines. Give it an ability to hold
->   multiple wait calls.
+- void SetDirection(Vecto2, Vector2) - assigns values to movementDirection and lookingDirection. This method is a listener to UnityEvent<Vector2,Vector2> from controller. 
+- void TakeAim() - switches aiming mode. 
+- overriden void FixedUpdate() - moves and rotates the rigidbody.
 
-29/05/2020
+To add:
 
->   Add git version control.
+- ability to override movement control. 
 
->   Fix aiming.
+### Projectile
 
->   Create a default rangeIndicatorController. It will make sure that on button
->   press the indicator is shown and on release its hidden and emits events.
+Child of SceneEntity, but also implements interface for objectPooling and assigning events for collisions on runtime.
 
-*TO DO:*
+Properties:
 
->   Sequencer Actions need refrences to rigibodies, sceneentities, controllers,
->   and stats they are attached to. We can’t assaign these values in inspector.
->   We need a universal way for them to initialize themselves.
->   SequencerComponents could have a method that takes in these required objects
->   and on Awake() in MainSequencerComponent we invoke an event with even three
->   arguments. SequencerComponents can than impement an interface or inherit
->   from a class that implements a sort of constructor like void
->   Initialize(rigidboy, sceneentity, controller).
+- Collider2DUnityEvent hitEvent - an event to which we assign what happens on projectile hit.
+- ProjectileUnityEvent missEvent - same as above but on miss.
+- float range - maximum distance which the projectile can travel. This is a squared value for optimasation.
+- float currRange - a variable to keep track of how far the projectile has travelled. When it reaches 0 we invoke missEven.
+- Vector2 prevPos - a variable for tracking how far has the projectile travelled since last update.
+
+Methods:
+
+- void SetEvents(Collider2DUnityEvent hitEv, ProjectileUnityEvent missEv) - a method so other classes can assign hit and miss events for projectiles.
+- void Spawn(Vector2 position, Vector2 direction) - spawn projectile.
+
+## 2. Sequencer System
+
+### Ability Sequencer
+
+Base class for the functionality of every in game ability. 
+
+### Sequencer Action
+
+Abstract base class for all components. It features the Initialize method that passes references to SceneEntities, Rigidbodies, Cameras, Controllers and etc. required by each SequencerAction.
+
+### Sequencer Components
+
+#### SequencerWait
+
+Can create multiple timers that all trigger the UnityEvent and it's listeners.
+
+#### SequencerLineIndicator and DefaultRangeIndicatorController
+
+Two components that are used for aiming of abilities. RangeIndicator is the graphical part of this functionality and DefaultRangeIndicatorController applies the input functionality.
+
+To add:
+
+- Create a base range indicator and base range indicator controller.
+
+#### Spawn Projectile
+
+Uses objectPooling to create and store instances for projectiles. A projectile needs to be spawned at position, activated, then based on hit or miss it invokes required methods and returns to pool. Because a projectile is a prefab we can't assign these hit and miss events in inspector so they need to be assigned by spawner.
