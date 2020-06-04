@@ -77,6 +77,16 @@ Abstract base class for all components. It features the Initialize method that p
 
 Can create multiple timers that all trigger the UnityEvent and it's listeners.
 
+#### IAbilityIndicator and BaseIndicatorController
+
+IAbilityIndicator is an interface for all Ability Indicators. It includes the functions for showing the indicator, hiding it and invokeing the return events.
+
+BaseIndicatorController interprets the inputs from Controllers(player input and AI) in form of BoolUnityEvents to IAbilityIndicators. It has three modes:
+
+- instant cast - doesn't show the indicator, just invokes the events without showing the indicator.
+- quick cast - shows the indicator on button press. Invokes and hides indicator on release.
+- double cast - shows the indicator on first press and hides with invoke on second.
+
 #### SequencerLineIndicator and DefaultRangeIndicatorController
 
 Two components that are used for aiming of abilities. RangeIndicator is the graphical part of this functionality and DefaultRangeIndicatorController applies the input functionality.

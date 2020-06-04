@@ -218,8 +218,8 @@ GameObject:
   - component: {fileID: 1763616137}
   - component: {fileID: 1763616136}
   - component: {fileID: 1763616142}
-  - component: {fileID: 1763616141}
   - component: {fileID: 1763616143}
+  - component: {fileID: 1763616141}
   - component: {fileID: 1763616145}
   - component: {fileID: 1763616144}
   m_Layer: 0
@@ -274,18 +274,7 @@ MonoBehaviour:
   abilityOneEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1763616137}
-        m_MethodName: TakeAim
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1763616143}
+      - m_Target: {fileID: 1763616141}
         m_MethodName: TriggerIndicator
         m_Mode: 0
         m_Arguments:
@@ -406,29 +395,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1763616134}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6abd9ec80064aab44bdf59c24854f938, type: 3}
+  m_Script: {fileID: 11500000, guid: 301fcbb9685e3f049b6b51f9ca2f92c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  posAndDirEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1763616144}
-        m_MethodName: SpawnProjectile
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  directionEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  lineRenderer: {fileID: 0}
-  sceneEntity: {fileID: 0}
-  lineLength: 4.47
+  indicator: {fileID: 1763616143}
+  entity: {fileID: 0}
+  mode: 1
 --- !u!120 &1763616142
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -534,11 +506,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 1763616134}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfed77133032b2f4cba7fd5ae494ae7d, type: 3}
+  m_Script: {fileID: 11500000, guid: 921aa243b5d07574a8c9be980b4721fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lineIndicator: {fileID: 1763616141}
-  instantCast: 0
+  isShowing: 0
+  directionEv:
+    m_PersistentCalls:
+      m_Calls: []
+  posAndDirEv:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1763616144}
+        m_MethodName: SpawnProjectile
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  lineRenderer: {fileID: 1763616142}
+  sceneEntity: {fileID: 1763616137}
+  lineLength: 5.64
 --- !u!114 &1763616144
 MonoBehaviour:
   m_ObjectHideFlags: 0
