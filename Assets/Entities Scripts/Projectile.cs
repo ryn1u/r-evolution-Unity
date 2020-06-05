@@ -13,7 +13,7 @@ public class Projectile : SceneEntity
     public void SetDirections(Vector2 dir)
     {
         movementDirection = dir.normalized;
-        lookingDirection = Mathf.Atan2(movementDirection.y, movementDirection.x) * Mathf.Rad2Deg + 90f;
+        lookingDirection = Mathf.Atan2(movementDirection.y, movementDirection.x) * Mathf.Rad2Deg - 90f;
     }
     public void SetEvents(Collider2DUnityEvent hitEv, ProjectileUnityEvent missEv)
     {
