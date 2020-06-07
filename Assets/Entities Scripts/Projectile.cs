@@ -30,10 +30,11 @@ public class Projectile : SceneEntity
     public void Spawn(Vector2 position, Vector2 direction)
     {
         gameObject.transform.position = position;
-        gameObject.SetActive(true);
+        SetDirections(direction);
+        gameObject.transform.rotation = Quaternion.AngleAxis(lookingDirection, Vector3.forward);
         prevPos = position;
         currRange = range;
-        SetDirections(direction);
+        gameObject.SetActive(true);
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

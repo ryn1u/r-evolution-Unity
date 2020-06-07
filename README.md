@@ -14,7 +14,8 @@
       1. Wait
       2. Spawn Projectile
       3. Range Indicator and Range Indicator Controller
-3.  next point
+3.  Animal stats
+4.  next point
 
 
 
@@ -98,3 +99,6 @@ To add:
 #### Spawn Projectile
 
 Uses objectPooling to create and store instances for projectiles. A projectile needs to be spawned at position, activated, then based on hit or miss it invokes required methods and returns to pool. Because a projectile is a prefab we can't assign these hit and miss events in inspector so they need to be assigned by spawner.
+
+## Animal Stats
+
