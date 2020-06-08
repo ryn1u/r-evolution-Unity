@@ -4,7 +4,7 @@ using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class SequencerWait
+public class SequencerWait : MonoBehaviour
 {
     private List<float> timers;
 

@@ -4,10 +4,8 @@ using UnityEngine;
 using UnityEngine.Events;
 
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : BaseEntityController
 {
-    public Vector2Vector2UnityEvent movementEvent;
-    public BoolUnityEvent abilityOneEvent;//emit pass true on press, false on release
     public Camera cam;
 
     private Vector2 movementInput;
