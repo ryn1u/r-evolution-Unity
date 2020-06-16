@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Runtime.CompilerServices;
+using System.Linq;
+using System.IO;
 
 public class AnimalDataEditor : EditorWindow
 {
@@ -32,7 +34,7 @@ public class AnimalDataEditor : EditorWindow
         EditorGUILayout.LabelField("PWR", GUILayout.Width(elseFieldWidth));
         EditorGUILayout.LabelField("WILL", GUILayout.Width(elseFieldWidth));
         EditorGUILayout.LabelField("AGI", GUILayout.Width(elseFieldWidth));
-        EditorGUILayout.LabelField("HP", GUILayout.Width(elseFieldWidth));
+        EditorGUILayout.LabelField("END", GUILayout.Width(elseFieldWidth));
         EditorGUILayout.EndHorizontal();
 
         foreach(AnimalData entry in animalDatabase)
@@ -40,17 +42,22 @@ public class AnimalDataEditor : EditorWindow
             EditorGUILayout.BeginHorizontal();
             entry.id = EditorGUILayout.IntField(entry.id, GUILayout.Width(elseFieldWidth/2));
             entry.animalName = EditorGUILayout.TextField(entry.animalName, GUILayout.Width(nameFieldWidth));
-            entry.STR = EditorGUILayout.IntField(entry.STR, GUILayout.Width(elseFieldWidth));
-            entry.DEF = EditorGUILayout.IntField(entry.DEF, GUILayout.Width(elseFieldWidth));
-            entry.PWR = EditorGUILayout.IntField(entry.PWR, GUILayout.Width(elseFieldWidth));
-            entry.WILL = EditorGUILayout.IntField(entry.WILL, GUILayout.Width(elseFieldWidth));
-            entry.AGI = EditorGUILayout.IntField(entry.AGI, GUILayout.Width(elseFieldWidth));
-            entry.HP = EditorGUILayout.IntField(entry.HP, GUILayout.Width(elseFieldWidth));
+            StatField(entry.stats.str, elseFieldWidth);
+            StatField(entry.stats.def, elseFieldWidth);
+            StatField(entry.stats.pwr, elseFieldWidth);
+            StatField(entry.stats.will, elseFieldWidth);
+            StatField(entry.stats.agi, elseFieldWidth);
+            StatField(entry.stats.end, elseFieldWidth);
+
             if(GUILayout.Button("Abilities"))
             {
                 AnimalAbilityEditor.OpenWindow();
                 AnimalAbilityEditor abiEditor = GetWindow<AnimalAbilityEditor>();
                 abiEditor.SetCurrentAnimal(entry);
+            }
+            if(GUILayout.Button("delete"))
+            {
+                DeleteAnimal(entry);
             }
             EditorGUILayout.EndHorizontal();
         }
@@ -59,7 +66,8 @@ public class AnimalDataEditor : EditorWindow
         newName = EditorGUILayout.TextField(newName, GUILayout.Width(nameFieldWidth));
         if(GUILayout.Button("+"))
         {
-            CreateNewAnimal(newName);
+            int id = GetAvaibleAnimalID(animalDatabase);
+            CreateNewAnimal(newName, id);
             newName = "";
         }
         EditorGUILayout.EndHorizontal();
@@ -68,30 +76,89 @@ public class AnimalDataEditor : EditorWindow
     }
     private void OnEnable()
     {
-        animalDatabase = GetAnimalDatabase();
+        animalDatabase = DatabaseUtility.GetAssetsFromDatabase<AnimalData>("AnimalData");
+        animalDatabase.Sort(AnimalIDComparator);
     }
     private void OnProjectChange()
     {
-        animalDatabase = GetAnimalDatabase();
+        animalDatabase = DatabaseUtility.GetAssetsFromDatabase<AnimalData>("AnimalData");
+        animalDatabase.Sort(AnimalIDComparator);
     }
 
-    public void CreateNewAnimal(string name)
+    public void CreateNewAnimal(string name, int id)
     {
-        AnimalData animalData = ScriptableObject.CreateInstance<AnimalData>();
-        animalData.animalName = name;
-        AssetDatabase.CreateAsset(animalData, "Assets/Animals/" + name + ".asset");
+        AnimalData data = CreateInstance<AnimalData>();
+        data.animalName = name;
+        data.id = id;
+
+        string folderName = name + "Data";
+        AssetDatabase.CreateFolder(DatabaseUtility.animalsDatabasePath.TrimEnd('/'), folderName);
+        Debug.Log(DatabaseUtility.animalsDatabasePath);
+        Debug.Log(folderName);
+
+        data.stats = CreateNewStats(data);
+        AssetDatabase.CreateAsset(data, DatabaseUtility.PathToAnimalDataFile(data));
     }
-    public List<AnimalData> GetAnimalDatabase()
+    public AnimalStats CreateNewStats(AnimalData data)
     {
-        List<AnimalData> output = new List<AnimalData>();
-        string[] guids = AssetDatabase.FindAssets("t:AnimalData");
-        foreach(string guid in guids)
+        AnimalStats stats = CreateInstance<AnimalStats>();
+        stats.str = CreateStat<STR>(data);
+        stats.def = CreateStat<DEF>(data);
+        stats.pwr = CreateStat<PWR>(data);
+        stats.will = CreateStat<WILL>(data);
+        stats.agi = CreateStat<AGI>(data);
+        stats.end = CreateStat<END>(data);
+        AssetDatabase.CreateAsset(stats, DatabaseUtility.PathToAnimalDatabseFiles(data) + data.animalName + "_Stats.asset");
+        return stats;
+    }
+    public T CreateStat<T>(AnimalData data) where T : AnimalStat
+    {
+        T stat = CreateInstance<T>();
+        stat.amount = 0;
+        stat.isMultiplier = false;
+        stat.multiplier = 1;
+        string assetName = data.animalName + "_" + stat.GetType().ToString() + "stat.asset";
+        AssetDatabase.CreateAsset(stat, DatabaseUtility.PathToAnimalDatabseFiles(data) + assetName);
+        return stat;
+    }
+
+    public void StatField<T>(T stat, float fieldWidth) where T : AnimalStat
+    {
+        stat.amount = EditorGUILayout.IntField(stat.amount, GUILayout.Width(fieldWidth));
+    }
+
+    public void DeleteAnimal(AnimalData data)
+    {
+        AssetDatabase.DeleteAsset(DatabaseUtility.PathToAnimalDataFile(data));
+        FileUtil.DeleteFileOrDirectory(DatabaseUtility.PathToAnimalDatabseFiles(data));
+    }
+
+    public int GetAvaibleAnimalID(List<AnimalData> database)
+    {
+        int output = 0;
+        
+        while(true)
         {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
-            AnimalData data = AssetDatabase.LoadAssetAtPath<AnimalData>(path);
-            output.Add(data);
+            if(database.Any(x => x.id == output))
+            {
+                output++;
+            }
+            else
+            {
+                return output;
+            }
         }
+    }
 
-        return output;
+    private int AnimalIDComparator(AnimalData x, AnimalData y)
+    {
+        if(x.id == y.id)
+        {
+            return 0;
+        }
+        else
+        {
+            return x.id < y.id ? -1 : 1;
+        }
     }
 }

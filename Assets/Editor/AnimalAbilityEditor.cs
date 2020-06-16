@@ -79,31 +79,17 @@ public class AnimalAbilityEditor : EditorWindow
     }
     private void OnEnable()
     {
-        abilityDatabase = GetAbilityDatabase();
-        animalDatabase = GetAnimalDatabase();
+        abilityDatabase = DatabaseUtility.GetAssetsFromDatabase<AbilityData>("AbilityData");
+        animalDatabase = DatabaseUtility.GetAssetsFromDatabase<AnimalData>("AnimalData");
         animalList = GetAnimalList(animalDatabase);
         names = GetAnimalNamesArray(animalDatabase);
     }
     private void OnProjectChange()
     {
-        abilityDatabase = GetAbilityDatabase();
-        animalDatabase = GetAnimalDatabase();
+        abilityDatabase = DatabaseUtility.GetAssetsFromDatabase<AbilityData>("AbilityData");
+        animalDatabase = DatabaseUtility.GetAssetsFromDatabase<AnimalData>("AnimalData");
         animalList = GetAnimalList(animalDatabase);
         names = GetAnimalNamesArray(animalDatabase);
-    }
-
-    public static List<AbilityData> GetAbilityDatabase()
-    {
-        List<AbilityData> output = new List<AbilityData>();
-        string[] guids = AssetDatabase.FindAssets("t:AbilityData");
-        foreach (string guid in guids)
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
-            AbilityData data = AssetDatabase.LoadAssetAtPath<AbilityData>(path);
-            output.Add(data);
-            Debug.Log("abi data: " + data.abilityName);
-        }
-        return output;
     }
 
     public static Dictionary<string, AnimalData> GetAnimalList(List<AnimalData> database)
@@ -116,18 +102,6 @@ public class AnimalAbilityEditor : EditorWindow
         }
 
         return output; ;
-    }
-    public static List<AnimalData> GetAnimalDatabase()
-    {
-        List<AnimalData> output = new List<AnimalData>();
-        string[] guids = AssetDatabase.FindAssets("t:AnimalData");
-        foreach (string guid in guids)
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
-            AnimalData data = AssetDatabase.LoadAssetAtPath<AnimalData>(path);
-            output.Add(data);
-        }
-        return output;
     }
     public static string[] GetAnimalNamesArray(List<AnimalData> database)
     {
