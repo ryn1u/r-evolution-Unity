@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+//Here are declared sub-classes of generic UnityEvents.
+//These declarations are required to allow serialization and editing in the Unity Inspector.
+
 [System.Serializable]
 public class Vector2Vector2UnityEvent : UnityEvent<Vector2, Vector2> { }
 [System.Serializable]

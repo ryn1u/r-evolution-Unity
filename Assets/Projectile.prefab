@@ -4772,7 +4772,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4578650732246824040
 Transform:
   m_ObjectHideFlags: 0
@@ -4890,6 +4890,7 @@ MonoBehaviour:
   movementDirection: {x: 0, y: 0}
   lookingDirection: 0
   speed: 25.87
+  overrideController: 0
   hitEvent:
     m_PersistentCalls:
       m_Calls: []

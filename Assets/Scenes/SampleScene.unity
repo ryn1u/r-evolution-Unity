@@ -329,9 +329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myRigidbody: {fileID: 1763616138}
-  movementDirection: {x: 0, y: 0}
-  lookingDirection: 0
-  speed: 8.82
+  speed: 3.46
 --- !u!50 &1763616138
 Rigidbody2D:
   serializedVersion: 4

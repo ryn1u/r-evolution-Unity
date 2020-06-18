@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class for storing large amounts of identical prefabs.
+/// </summary>
+/// <typeparam name="T">Type of prefab to store derived from GameObject.</typeparam>
 public abstract class GenericObjectPool<T> : MonoBehaviour where T : Component
 {
     [SerializeField]
